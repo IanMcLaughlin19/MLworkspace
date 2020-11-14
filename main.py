@@ -59,4 +59,3 @@ df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred, 'Predicted prob':prob_
 
 if __name__ == "__main__":
     print(classification_report(df['Actual'], df['Predicted'], digits=3))
-    print(accuracy_s core(df['Actual'], df['Predicted']))
