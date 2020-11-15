@@ -46,7 +46,7 @@ chi_2_features = ['fpl',
  'PPINCIMP',
  'PPMARIT']
 
-categorical_variables = mutual_information_features.copy()
+categorical_variables = chi_2_features.copy()
 categorical_variables.remove("KHscore")
 df_categorical = pd.get_dummies(cfpb_data[categorical_variables], drop_first=True)
 df_numerical = cfpb_data["KHscore"]
