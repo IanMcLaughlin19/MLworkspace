@@ -59,9 +59,9 @@ model = sm.Logit(y_train, X_train)
 results = model.fit(maxiter=500)
 prob_pred = results.predict(X_test)
 y_pred = [0 if x < .25 else 1 for x in prob_pred]
-
 df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred, 'Predicted prob':prob_pred})
 
 if __name__ == "__main__":
     print(results.summary())
     print(classification_report(df['Actual'], df['Predicted'], digits=3))
+    print(accuracy_score(df["Actual"], df["Predicted"]))

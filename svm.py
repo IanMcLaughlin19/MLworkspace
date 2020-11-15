@@ -67,14 +67,44 @@ y_pred_proba = model_svc.predict_proba(X_test)[:, 1]
 fpr, tpr, t = metrics.roc_curve(y_test, y_pred_proba)
 auc = metrics.roc_auc_score(y_test, y_pred_proba)
 
+from sklearn.model_selection import GridSearchCV
 
+# defining parameter range
+param_grid = {'C': [0.1, 1, 10, 100, 1000],
+              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+              'kernel': ['rbf']}
+from sklearn.svm import SVC
+grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=3)
 
+# fitting the model for grid search
+grid.fit(X_train, y_train)
+model = SVC()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+print(classification_report(y_test, predictions))
 
+from sklearn.model_selection import GridSearchCV
+
+# defining parameter range
+param_grid = {'C': [0.1, 1, 10, 100, 1000],
+              'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+              'kernel': ['rbf']}
+
+grid = GridSearchCV(SVC(), param_grid, refit=True, verbose=3)
+
+# fitting the model for grid search
+grid.fit(X_train, y_train)
+
+"""accuracy_svm = round(model_svc.score(X_train, y_train) * 100, 2)
+print("Model Accuracy is: ", accuracy_svm, "%")
+print(classification_report(y_test, model_svc.predict(X_test)))"""
+"""plt.plot(fpr, tpr, label="AUC="+str(auc))
+plt.legend()
+plt.show()"""
+grid_predictions = grid.predict(X_test)
+
+# print classification report
 if __name__ == "__main__":
-    accuracy_svm = round(model_svc.score(X_train, y_train) * 100, 2)
-    print("Model Accuracy is: ", accuracy_svm, "%")
-    print(classification_report(y_test, model_svc.predict(X_test)))
-    plt.plot(fpr, tpr, label="AUC="+str(auc))
-    plt.legend()
-    plt.show()
+ print(classification_report(y_test, grid_predictions))
+
 
