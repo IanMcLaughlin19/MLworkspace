@@ -46,11 +46,16 @@ chi_2_features = ['fpl',
  'PPINCIMP',
  'PPMARIT']
 
+categorical_variables = mutual_information_features.copy()
+categorical_variables.remove("KHscore")
+df_categorical = pd.get_dummies(cfpb_data[categorical_variables], drop_first=True)
+df_numerical = cfpb_data["KHscore"]
+df = pd.concat([df_categorical, df_numerical], axis=1)
 X = cfpb_data[mutual_information_features]
 y = cfpb_data[TARGET_COL]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, random_state=0)
-X1 = sm.add_constant(X)
-model = sm.Logit(y_train, X_train.astype(float))
+X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=.2, random_state=0)
+X1 = sm.add_constant(df)
+model = sm.Logit(y_train, X_train)
 results = model.fit(maxiter=500)
 prob_pred = results.predict(X_test)
 y_pred = [0 if x < .25 else 1 for x in prob_pred]
@@ -58,4 +63,5 @@ y_pred = [0 if x < .25 else 1 for x in prob_pred]
 df = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred, 'Predicted prob':prob_pred})
 
 if __name__ == "__main__":
+    print(results.summary())
     print(classification_report(df['Actual'], df['Predicted'], digits=3))
